@@ -1,4 +1,11 @@
+import os
+
 import disnake
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Loading env variables from .env file
+TOKEN = os.getenv('TOKEN')
 
 client = disnake.Client()
 
@@ -16,5 +23,5 @@ async def on_message(message):
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
 
-## ADD SECRET FOR TOKEN!
-client.run('OTMwNzgxMzk4NDM0OTkyMTQ15.Yd63ug.dq3SxFX-kUbXjG42d4Lsf4uPIXw')
+
+client.run(TOKEN)
