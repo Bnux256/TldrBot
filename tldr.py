@@ -9,11 +9,13 @@ gets zip file - unzips it. create update command. return markdown file or None.
 
 
 def update_cache():
+    """
+        Downloads and extracts the commands cache.
+    """
     # Downloading Cache
-    zipUrl = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
+    zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
     print('Downloading files, please wait')
-    zipFile = requests.get(zipUrl)
-    print('aaa')
+    zip_file = requests.get(zipUrl)
     with open('tldr.zip', 'wb') as file:
         file.write(zipFile.content)
     print('Download complete')
@@ -23,10 +25,16 @@ def update_cache():
     os.mkdir('tldr')
     with ZipFile('tldr.zip', 'r') as zipFile:
         zipFile.extractall('tldr')
+    print('Unzip complete')
 
 
-def getMdFile(command):
-    """
+def get_md_file(command: str) -> None:
+    """Gets the md file of a command
+
+    Args:
+        command (str): name of input command
+
+    Returns:
 
     """
 
