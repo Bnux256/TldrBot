@@ -1,11 +1,9 @@
-import os
-
 import disnake
 from dotenv import load_dotenv
 import os
 
 load_dotenv()  # Loading env variables from .env file
-TOKEN = os.getenv('TOKEN')
+TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
 
 client = disnake.Client()
 
