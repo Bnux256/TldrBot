@@ -30,5 +30,3 @@ def getMdFile(command):
 
     """
 
-
-update_cache()
