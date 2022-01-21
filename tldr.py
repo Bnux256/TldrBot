@@ -7,6 +7,7 @@ from requests.models import Response
 
 '''
 gets zip file - unzips it. create update command. return markdown file or None.  
+todo - add unit test for get_md
 '''
 
 
