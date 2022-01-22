@@ -19,15 +19,15 @@ def update_cache():
     zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
     print('Downloading files, please wait')
     zip_file: Response = requests.get(zip_url)
-    with open('tldr.zip', 'wb') as file:
+    with open('../tldr.zip', 'wb') as file:
         file.write(zip_file.content)
     print('Download complete')
 
     # Unzip the file
     print('Unzipping file')
-    os.mkdir('tldr')
+    os.mkdir('tldr-pages')
     with ZipFile('tldr.zip', 'r') as file:
-        file.extractall('tldr')
+        file.extractall('tldr-pages')
     print('Unzip complete')
 
 def is_in_cache(input_command: str, platform: str = "common", language: str = None) -> bool:
@@ -38,7 +38,7 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
     param language (str): the given language
     """
     # loading index.json file from cache
-    with open('tldr/index.json') as file:
+    with open('tldr-pages/index.json') as file:
         cache_index: dict = json.load(file)
     commands: list = cache_index.get('commands')
 
@@ -72,15 +72,17 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
     # If command exists in given language we return the md file
     if is_in_cache(input_command, platform, language):
         if language:
-            directory_path = r'tldr/pages.%s/%s/%s.md' % (language, platform,input_command)
+            directory_path = r'tldr-pages/pages.%s/%s/%s.md' % (language, platform,input_command)
         else:
-            directory_path = r'tldr/pages%s/%s/%s.md' % (str(language or ''), platform, input_command)
+            directory_path = r'tldr-pages/pages%s/%s/%s.md' % (str(language or ''), platform, input_command)
 
     # if command doesn't exist in given language we return the english version of command
     elif is_in_cache(input_command,platform):
-        directory_path = r'tldr/pages%s/%s/%s.md' % platform, input_command
+        directory_path = r'tldr-pages/pages%s/%s/%s.md' % platform, input_command
 
     # if command doesn't exist in language and in platform we will return it in common
+    else:
+        return None
 
     # return the md file
     with open(directory_path) as file:
