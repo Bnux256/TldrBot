@@ -1,9 +1,11 @@
 import unittest
-from tldrBot.tldrBot import tldr
+import sys
+sys.path.append("..")
+from tldr.py import tldr
 
 class getMd(unittest.TestCase):
     def get_en_common(self):
-        self.assertIsNotNone()
+        self.assertIsNotNone(tldr.)
 
 
 if __name__ == '__main__':

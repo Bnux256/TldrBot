@@ -2,7 +2,7 @@ import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 import os
-from tldrBot import tldr
+from tldr.py import tldr
 
 load_dotenv()  # Loading env variables from .env file
 TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
