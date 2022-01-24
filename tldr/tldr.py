@@ -4,11 +4,12 @@ from zipfile import ZipFile
 import os
 import json
 from requests.models import Response
+import shutil
 
 '''
 gets zip file - unzips it. create update command. return markdown file or None.  
+todo - add unit test for get_md
 '''
-
 
 def update_cache():
     """
@@ -24,9 +25,12 @@ def update_cache():
 
     # Unzip the file
     print('Unzipping file')
-    os.mkdir('tldr')
+    # deleting folder if exists
+    if os.path.exists('tldr-pages'):
+        shutil.rmtree('tldr-pages/')
+    os.mkdir('tldr-pages')
     with ZipFile('tldr.zip', 'r') as file:
-        file.extractall('tldr')
+        file.extractall('tldr-pages')
     print('Unzip complete')
 
 def is_in_cache(input_command: str, platform: str = "common", language: str = None) -> bool:
@@ -37,7 +41,7 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
     param language (str): the given language
     """
     # loading index.json file from cache
-    with open('tldr/index.json') as file:
+    with open('tldr-pages/index.json') as file:
         cache_index: dict = json.load(file)
     commands: list = cache_index.get('commands')
 
@@ -53,13 +57,13 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
         # else we ignore the language
         else:
             language_in_languages: bool = True
-        
+
         # check if current command is a match
         if  input_command_match and platform_in_platforms and language_in_languages:
             return True
     
 
-def get_md_file(input_command: str, platform: str = "common", language: str = None) -> None:
+def get_md(input_command: str, platform: str = "common", language: str = None) -> None:
     """
     Gets the path to a md file of the given command. If it doesn't exist, returns None.
     param command (str): name of input command
@@ -67,9 +71,24 @@ def get_md_file(input_command: str, platform: str = "common", language: str = No
     param language (str): the given language
     Returns:
     """
+    '''Gets the path of the md file'''
+    # If command exists in given language we return the md file
+    if is_in_cache(input_command, platform, language):
+        if language:
+            directory_path = r'tldr-pages/pages.%s/%s/%s.md' % (language, platform,input_command)
+        else:
+            directory_path = r'tldr-pages/pages%s/%s/%s.md' % (str(language or ''), platform, input_command)
 
+    # if command doesn't exist in given language we return the english version of command
+    elif is_in_cache(input_command,platform):
+        directory_path = r'tldr-pages/pages%s/%s/%s.md' % platform, input_command
 
+    # if command doesn't exist in language and in platform we will return it in common
+    else:
+        return None
 
-    
+    # return the md file
+    with open(directory_path) as file:
+        md_file = file.read()
 
-print(is_in_cache('cd'))
+    return md_file
