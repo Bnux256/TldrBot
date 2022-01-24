@@ -17,30 +17,14 @@ async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     print("------")
 
+    
 @bot.slash_command(description="Update the bot's TLDR Pages cache")
 async def update(inter):
     await inter.response.send_message(tldr.update_cache())
 
-
-
+    
 @bot.slash_command(description="Retrieve the TLDR for a command")
 async def tldr(inter, command, platform: str = "common", language: str = "None"):
     await inter.response.send_message(tldr.get_md(command, platform, language))
-
-
-@bot.slash_command()
-async def ping(inter):
-    await inter.response.send_message("Pong!")
-'''
-
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-'''
 
 bot.run(TOKEN)
