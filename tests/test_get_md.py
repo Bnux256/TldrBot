@@ -1,8 +1,7 @@
 import unittest
 import sys
-# sys.path.append("../tldr")
 import os
-print(os.getcwd())
+sys.path.append(os.getcwd())
 from tldr.tldr import get_md
 
 class getMd(unittest.TestCase):
