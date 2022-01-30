@@ -2,7 +2,10 @@ import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 import os
-from tldr.py import tldr
+import sys
+
+sys.path.append(os.path.join(os.getcwd(), r'tldr'))
+import tldr
 
 load_dotenv()  # Loading env variables from .env file
 TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
@@ -16,6 +19,7 @@ bot = commands.Bot(
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
     print("------")
+    print()
 
     
 @bot.slash_command(description="Update the bot's TLDR Pages cache")
@@ -27,4 +31,7 @@ async def update(inter):
 async def tldr(inter, command, platform: str = "common", language: str = "None"):
     await inter.response.send_message(tldr.get_md(command, platform, language))
 
-bot.run(TOKEN)
+try:
+    bot.run(TOKEN)
+except Exception as e:
+    print(e)
