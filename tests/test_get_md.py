@@ -1,17 +1,18 @@
 import unittest
 import sys
 import os
-sys.path.append(os.getcwd())
-from tldr.tldr import get_md
+sys.path.append(os.path.join(os.getcwd(), r'tldr'))
+import tldr
 
-class getMd(unittest.TestCase):
-    def get_en_common(self):
+
+class testGetMd(unittest.TestCase):
+    def test_get_en_common(self):
         self.assertIsNotNone(tldr.get_md('cd'), "en_common failed")
-    def get_fr_common(self):
+    def test_get_fr_common(self):
         self.assertIsNotNone(tldr.get_md('cd', language='fr'), "fr_common failed")
-    def get_fr_linux(self):
-        self.assertIsNotNone(tldr.get_md('cd', 'linux', 'fr'), "fr_linux failed")
-    def get_not_exist(self):
+    def test_get_fr_linux(self):
+        self.assertIsNotNone(tldr.get_md('ip', 'linux', 'fr'), "fr_linux failed")
+    def test_get_not_exist(self):
         self.assertIsNone(tldr.get_md('aaa','linux', 'fr'), "shouldn't have failed")
 
 
