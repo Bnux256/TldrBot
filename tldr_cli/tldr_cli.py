@@ -6,7 +6,6 @@ import json
 from requests.models import Response
 import shutil
 
-
 def update_cache():
     """
     Downloads and extracts the cache.
@@ -90,7 +89,4 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
 
     return md_file
 
-
-def temp():
-    print('entered func')
-    return 'a'
+#print(get_md('cd', 'common', None))
