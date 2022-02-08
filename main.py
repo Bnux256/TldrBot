@@ -23,32 +23,23 @@ async def on_ready():
 
 @bot.slash_command(description="Update the bot's TLDR Pages cache")
 async def update(inter):
-    await asyncio.run(tldr_cli.update_cache())
+    tldr_cli.update_cache()
     await inter.response.send_message('Cache updated!')
 
 
-# test
-@bot.slash_command(description="Responds with 'World'")
-async def hello(inter, command):
-    '''
-    loop = asyncio.get_event_loop()
-    result = tldr.temp()
-    future = asyncio.run_coroutine_threadsafe(result, loop)
-    print(future)
-    '''
-    #future = asyncio.run(tldr.temp())
-    #await tldr.temp.run(inter)
-    value = tldr_cli.get_md('cd')
-    await inter.response.send_message(value)
-
-
-# test
-
 @bot.slash_command(description="Retrieve the TLDR for a command")
 async def tldr(inter, command, platform: str = "common", language: str = None):
-    print('command, platform, laguage:', command, platform, language)
     md = tldr_cli.get_md(command, platform, language)
-    await inter.response.send_message(md)
+    print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
+
+    # if command doesn't exist we will check if it exists in different platforms
+    if md is None:
+        # add maybe - maybe you meant different platform? in hieracy.
+        await inter.response.send_message('Command doesn\'t exist in cache. To update, run /update command.')
+    
+    # if command exists we send it
+    else:
+        await inter.response.send_message(md)
 
 
 try:

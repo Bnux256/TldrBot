@@ -27,7 +27,7 @@ def update_cache():
     with ZipFile('tldr.zip', 'r') as file:
         file.extractall('tldr-pages')
     print('Unzip complete')
-
+    
 
 def is_in_cache(input_command: str, platform: str = "common", language: str = None) -> bool:
     """
@@ -88,5 +88,3 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
         md_file = file.read()
 
     return md_file
-
-#print(get_md('cd', 'common', None))
