@@ -6,11 +6,6 @@ import json
 from requests.models import Response
 import shutil
 
-'''
-gets zip file - unzips it. create update command. return markdown file or None.  
-todo - add unit test for get_md
-'''
-
 def update_cache():
     """
     Downloads and extracts the cache.
@@ -32,6 +27,7 @@ def update_cache():
     with ZipFile('tldr.zip', 'r') as file:
         file.extractall('tldr-pages')
     print('Unzip complete')
+    
 
 def is_in_cache(input_command: str, platform: str = "common", language: str = None) -> bool:
     """
@@ -48,20 +44,20 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
     '''check if command exists in cache index'''
     # go through the list of dicts of commands
     for command in commands:
-        input_command_match: bool = command.get('name') == input_command 
+        input_command_match: bool = command.get('name') == input_command
         platform_in_platforms: bool = platform in command.get('platform')
-        
+
         #  if a language is given then we check if command exists in said language
         if language:
-            language_in_languages: bool = language in command.get('language') 
-        # else we ignore the language
+            language_in_languages: bool = language in command.get('language')
+            # else we ignore the language
         else:
             language_in_languages: bool = True
 
         # check if current command is a match
-        if  input_command_match and platform_in_platforms and language_in_languages:
+        if input_command_match and platform_in_platforms and language_in_languages:
             return True
-    
+
 
 def get_md(input_command: str, platform: str = "common", language: str = None) -> None:
     """
@@ -75,12 +71,12 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
     # If command exists in given language we return the md file
     if is_in_cache(input_command, platform, language):
         if language:
-            directory_path = r'tldr-pages/pages.%s/%s/%s.md' % (language, platform,input_command)
+            directory_path = r'tldr-pages/pages.%s/%s/%s.md' % (language, platform, input_command)
         else:
             directory_path = r'tldr-pages/pages%s/%s/%s.md' % (str(language or ''), platform, input_command)
 
     # if command doesn't exist in given language we return the english version of command
-    elif is_in_cache(input_command,platform):
+    elif is_in_cache(input_command, platform):
         directory_path = r'tldr-pages/pages%s/%s/%s.md' % platform, input_command
 
     # if command doesn't exist in language and in platform we will return it in common
