@@ -5,29 +5,43 @@ import os
 import json
 from requests.models import Response
 import shutil
+import time
 
 def update_cache():
     """
     Downloads and extracts the cache.
     """
+    
     # Download Cache
-    zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
     print('Downloading files, please wait')
+    yield 'Downloading files, please wait'
+    '''
+    zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
     zip_file: Response = requests.get(zip_url)
     with open('tldr.zip', 'wb') as file:
         file.write(zip_file.content)
+    '''
+    time.sleep(4)
     print('Download complete')
+    yield 'Download complete'
 
     # Unzip the file
     print('Unzipping file')
+    yield 'Unzipping file'
+
+    '''
     # deleting folder if exists
     if os.path.exists('tldr-pages'):
         shutil.rmtree('tldr-pages/')
     os.mkdir('tldr-pages')
     with ZipFile('tldr.zip', 'r') as file:
         file.extractall('tldr-pages')
+    '''
     print('Unzip complete')
-    
+    yield 'Unzip complete'
+
+    yield 'Cache Updated!'
+
 
 def is_in_cache(input_command: str, platform: str = "common", language: str = None) -> bool:
     """
