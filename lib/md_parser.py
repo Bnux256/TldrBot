@@ -10,15 +10,17 @@ def md_to_embed(md_command: str):
     embed (discord.embed?????): An embed that prints the command.
     """
     lines: [str] = md_command.split("\n")
-    embed: disnake.Embed() = disnake.Embed(colour=disnake.Colour.from_rgb(54, 57, 63))
     description: str = ""
+    fields: [[str]] = []
     field: [str] = []
+    title: str = ""
+
     # going through the lines of file
     for line in lines:
 
         # parsing header lines
         if "#" in line and not ("##" in line):
-            embed.title(line[line.find("#") + 1:])
+            title = line[line.find("#") + 1:]
 
         # parsing description lines
         if ">" in line:
@@ -26,12 +28,18 @@ def md_to_embed(md_command: str):
 
         # parsing field lines
         if line.startswith("-") or line.startswith(" -"):
-            field[0] = line[line.find("-"):]
+            field: [str] = [line[line.find("-"):]]
 
         # parsing back tick code lines
         if line.startswith("`") or line.startswith(" `"):
-            field[1] = line[line.find("`"):]
-            embed.add_field(field[0], field[1])
+            field.append(line[line.find("`"):])
+            fields.append(field)
 
-    embed.description(description)
+    # creating embed
+    embed = disnake.Embed(title=title, colour=disnake.Colour.from_rgb(54, 57, 63), description=description)
+
+    # adding all fields to embed
+    for field in fields:
+        embed.add_field(field[0], field[1], inline=False)
+
     return embed

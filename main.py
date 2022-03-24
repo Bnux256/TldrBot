@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import lib.tldr_cli as tldr_cli
 import lib.progress_bar as progress_bar
+import lib.md_parser as md_parser
 
 load_dotenv()  # Loading env variables from .env file
 TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
@@ -77,14 +78,17 @@ async def tldr(
     else:
         md = tldr_cli.get_md(command, platform, language)
 
-    # if command doesn't exist we will check if it exists in different platforms
+    # if command doesn't exist we notify user
     if md is None:
-        # add maybe - maybe you meant different platform? in hieracy.
-        await inter.response.send_message('Command doesn\'t exist in cache. To update, run /update command.')
+        error_msg: str = "Command doesn't exist in cache. To update, run `/update` command."
+        embed: disnake.Embed() = disnake.Embed(description=error_msg, colour=disnake.Colour.from_rgb(237, 66, 69))
+        embed.set_author(name="Error", icon_url="https://images-ext-2.discordapp.net/external/6HgbQ8ajjgJozMXg37BWe53K5YTN3YMVmWC93ioekY8/https/raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f6ab.png")
 
     # if command exists we send it
     else:
-        await inter.response.send_message(md)
+        embed: disnake.Embed() = md_parser.md_to_embed(md)
+
+    await inter.send(embed=embed)  # sending the embed
 
 
 try:
