@@ -86,11 +86,11 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
         if language:
             directory_path = r'%s/pages.%s/%s/%s.md' % (PAGES_DIR, language, platform, input_command)
         else:
-            directory_path = r'%s/pages%s/%s/%s.md' % PAGES_DIR,(str(language or ''), platform, input_command)
+            directory_path = r'%s/pages%s/%s/%s.md' % (PAGES_DIR,(str(language or '')), platform, input_command)
 
     # if command doesn't exist in given language we return the english version of command
     elif is_in_cache(input_command, platform):
-        directory_path = r'%s/pages%s/%s/%s.md' % PAGES_DIR,platform, input_command
+        directory_path = r'%s/pages%s/%s/%s.md' % PAGES_DIR, platform, input_command
 
     # if command doesn't exist in language and in platform we will return it in common
     else:

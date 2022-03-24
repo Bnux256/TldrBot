@@ -23,7 +23,7 @@ async def on_ready():
 
 
 @bot.slash_command(description="Update the bot's TLDR Pages cache")
-async def update(inter: ApplicationCommandInteraction):
+async def update(inter: disnake.ApplicationCommandInteraction):
     # setting gens
     update_gen = tldr_cli.update_cache()
     progress_gen = progress_bar.progress_bar(4)
@@ -52,14 +52,14 @@ async def autocomp_langs(inter: disnake.ApplicationCommandInteraction, user_inpu
 async def tldr(
     inter: disnake.ApplicationCommandInteraction,
     command: str,
-    platform: str = "common",
+    platform: str = commands.Param(choices=tldr_cli.get_platforms()),
     language: str = None
     #language: str = commands.Param(autocomplete=autocomp_langs)
     ):
-    
-    md = tldr_cli.get_md(command, platform, language)
-    print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
 
+    print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
+    md = tldr_cli.get_md(command, platform, language)
+    
     # if command doesn't exist we will check if it exists in different platforms
     if md is None:
         # add maybe - maybe you meant different platform? in hieracy.
@@ -68,7 +68,6 @@ async def tldr(
     # if command exists we send it
     else:
         await inter.response.send_message(md)
-
 
 try:
     bot.run(TOKEN)

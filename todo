@@ -1,0 +1,10 @@
+easy critical:
+- in tldr_cli.get_md() change dir path to path.join
+- move embed icons to src folder and change link to github link
+
+- create unittest for progress bar
+- add autocomplete for languages and create unittest 
+- add autocomplete for commands + unittest
+- md to embed parsr
+- fix import in tests
+- create makefile for tests

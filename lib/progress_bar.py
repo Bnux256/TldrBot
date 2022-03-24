@@ -1,5 +1,5 @@
 def progress_bar(steps):
-    str_lst = ['   '] * (steps+3)
+    str_lst = [' . . .'] * (steps+3)
     str_lst[0] = '| '
     str_lst[-2] = ' |'
     index = 1
