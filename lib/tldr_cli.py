@@ -8,21 +8,20 @@ import shutil
 
 PAGES_DIR = 'tldr-pages'
 
+
 def update_cache() -> None:
     """
     Downloads and extracts the cache.
     yields: messages for user to show progress. 
     """
-    
+
     # Download Cache
     print('Downloading files, please wait')
     yield 'Downloading files, please wait'
-    """
     zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
     zip_file: Response = requests.get(zip_url)
     with open('tldr.zip', 'wb') as file:
         file.write(zip_file.content)
-    """
     print('Download complete')
     yield 'Download complete'
 
@@ -48,11 +47,17 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
     param input_command (str): name of input command
     param platform (str): the given platform
     param language (str): the given language
+    returns is_in_cache (bool): if the command exists in cache
     """
     # loading index.json file from cache
-    with open('tldr-pages/index.json') as file:
-        cache_index: dict = json.load(file)
-    commands: list = cache_index.get('commands')
+    try:
+        with open('tldr-pages/index.json') as file:
+            cache_index: dict = json.load(file)
+        commands: list = cache_index.get('commands')
+    except FileNotFoundError:
+        print("commands index doesn't exist - downloading cache")
+        update_cache()
+        is_in_cache(input_command, platform, language)
 
     '''check if command exists in cache index'''
     # go through the list of dicts of commands
@@ -72,7 +77,7 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
             return True
 
 
-def get_md(input_command: str, platform: str = "common", language: str = None) -> None:
+def get_md(input_command: str, platform: str = "common", language: str = None) -> str or None:
     """
     Gets the path to a md file of the given command. If it doesn't exist, returns None.
     param command (str): name of input command
@@ -86,13 +91,16 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
         if language:
             directory_path = r'%s/pages.%s/%s/%s.md' % (PAGES_DIR, language, platform, input_command)
         else:
-            directory_path = r'%s/pages%s/%s/%s.md' % (PAGES_DIR,(str(language or '')), platform, input_command)
+            directory_path = r'%s/pages%s/%s/%s.md' % (PAGES_DIR, (str(language or '')), platform, input_command)
 
     # if command doesn't exist in given language we return the english version of command
     elif is_in_cache(input_command, platform):
-        directory_path = r'%s/pages%s/%s/%s.md' % PAGES_DIR, platform, input_command
+        return get_md(input_command, platform)
 
     # if command doesn't exist in language and in platform we will return it in common
+    elif is_in_cache(input_command):
+        return get_md(input_command)
+
     else:
         return None
 
@@ -102,19 +110,27 @@ def get_md(input_command: str, platform: str = "common", language: str = None) -
 
     return md_file
 
-def get_languages() -> list():
+
+def get_languages() -> list[str]:
     """
     Function returns a list of all languages in TLDR cache
     Returns: list of strings that are tldr Languages
     """
     # ADD TRY EXCEPT!!!
-    
     dirs = os.listdir(PAGES_DIR)
-    dirs = [dir for dir in dirs if os.path.isdir(os.path.join(PAGES_DIR, dir)) and dir!='pages']
-    languages = [dir[dir.find('.')+1:] for dir in dirs]
+    dirs = [directory for directory in dirs if os.path.isdir(os.path.join(PAGES_DIR, directory)) and directory != 'pages']
+    languages = [directory[directory.find('.') + 1:] for directory in dirs]
     languages.append("en")
+    # Remove json and license.md
     return languages
-    ### Remove json and license.md
 
-def get_platforms() -> list():
-    return os.listdir(os.path.join(PAGES_DIR, 'pages'))
+
+def get_platforms() -> list[str]:
+    """
+    Function returns a list of all platforms
+    Returns platforms[str]: list of all
+    """
+    try:
+        return os.listdir(os.path.join(PAGES_DIR, 'pages'))
+    except FileNotFoundError:
+        return [""]

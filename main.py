@@ -1,9 +1,7 @@
-import asyncio
 import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
 import os
-import sys
 import lib.tldr_cli as tldr_cli
 import lib.progress_bar as progress_bar
 
@@ -29,45 +27,65 @@ async def update(inter: disnake.ApplicationCommandInteraction):
     progress_gen = progress_bar.progress_bar(4)
 
     # creating embed
-    embed = disnake.Embed(colour=disnake.Colour.from_rgb(54,57,63))
+    embed = disnake.Embed(colour=disnake.Colour.from_rgb(54, 57, 63))
     embed.add_field(next(progress_gen), next(update_gen))
-    embed.set_author(name = "Updating Cache", icon_url = "https://cdn.discordapp.com/emojis/936226298429329489.gif?size=44&quality=lossless")
-    await inter.send(embed = embed)
+    embed.set_author(name="Updating Cache",
+                     icon_url="https://cdn.discordapp.com/emojis/936226298429329489.gif?size=44&quality=lossless")
+    await inter.send(embed=embed)
 
     # updating progress
     for i in range(4):
         embed.clear_fields()
         embed.add_field(next(progress_gen), next(update_gen))
-        await inter.edit_original_message(embed = embed)
-    
+        await inter.edit_original_message(embed=embed)
+
     # sending finished embed
     embed.clear_fields()
-    embed.set_author(name = "Cache Updated!", icon_url = "https://cdn.discordapp.com/emojis/949338159538384926.webp?size=96&quality=lossless")
-    await inter.edit_original_message(embed = embed)
+    embed.set_author(name="Cache Updated!",
+                     icon_url="https://cdn.discordapp.com/emojis/949338159538384926.webp?size=96&quality=lossless")
+    await inter.edit_original_message(embed=embed)
+
 
 async def autocomp_langs(inter: disnake.ApplicationCommandInteraction, user_input: str):
-    return [lang for lang in tldr_cli.get_languages() if user_input.lower() in lang]
+    """
+    autocomplete function for languages
+    param user_input(str): current input
+    returns [str]: languages that begin with the commands' letters
+    """
+    # Discord doesn't allow for autocomplete larger than 25 therefore we return the first 25 languages
+    if not user_input:
+        languages = tldr_cli.get_languages()
+        return languages[len(languages)-25:]  # returning the last 25 languages
+    else:
+        return [lang for lang in tldr_cli.get_languages() if user_input.lower() in lang]
+
 
 @bot.slash_command(description="Retrieve the TLDR for a command")
 async def tldr(
-    inter: disnake.ApplicationCommandInteraction,
-    command: str,
-    platform: str = commands.Param(choices=tldr_cli.get_platforms()),
-    language: str = None
-    #language: str = commands.Param(autocomplete=autocomp_langs)
-    ):
-
+        inter: disnake.ApplicationCommandInteraction,
+        command: str,
+        # platform: str = commands.Param(choices=tldr_cli.get_platforms()),
+        platform: str = commands.Param(choices=tldr_cli.get_platforms()),
+        language: str = commands.Param(autocomplete=autocomp_langs)
+        # language: str = "en" or commands.Param(autocomplete=autocomp_langs)
+):
     print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
-    md = tldr_cli.get_md(command, platform, language)
-    
+
+    # if language is english we treat it as None
+    if language == 'en':
+        md = tldr_cli.get_md(command, platform)
+    else:
+        md = tldr_cli.get_md(command, platform, language)
+
     # if command doesn't exist we will check if it exists in different platforms
     if md is None:
         # add maybe - maybe you meant different platform? in hieracy.
         await inter.response.send_message('Command doesn\'t exist in cache. To update, run /update command.')
-    
+
     # if command exists we send it
     else:
         await inter.response.send_message(md)
+
 
 try:
     bot.run(TOKEN)

@@ -8,3 +8,6 @@ easy critical:
 - md to embed parsr
 - fix import in tests
 - create makefile for tests
+- create embed for command
+- create embed for command doesn't exist
+- make autocomplete optional!!!!!
