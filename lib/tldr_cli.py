@@ -49,16 +49,20 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
     param language (str): the given language
     returns is_in_cache (bool): if the command exists in cache
     """
-    # loading index.json file from cache
-    try:
-        with open('tldr-pages/index.json') as file:
-            cache_index: dict = json.load(file)
-        commands: list = cache_index.get('commands')
-    except FileNotFoundError:
+   
+    # making sure that index.js exists
+    if not os.path.exists('tldr-pages/index.json'):
         print("commands index doesn't exist - downloading cache")
-        update_cache()
-        is_in_cache(input_command, platform, language)
+        # updating cache
+        gen = update_cache()
+        for i in range(5):
+            next(gen)
 
+    # loading index.json file from cache
+    with open('tldr-pages/index.json') as file:
+        cache_index: dict = json.load(file)
+    commands: list = cache_index.get('commands')
+    
     '''check if command exists in cache index'''
     # go through the list of dicts of commands
     for command in commands:

@@ -3,11 +3,9 @@ easy critical:
 - move embed icons to src folder and change link to github link
 
 - create unittest for progress bar
-- add autocomplete for languages and create unittest 
 - add autocomplete for commands + unittest
-- md to embed parsr
 - fix import in tests
+- fix update_cache unittest
+- add progress bar import
 - create makefile for tests
-- create embed for command
 - create embed for command doesn't exist
-- make autocomplete optional!!!!!
