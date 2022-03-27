@@ -66,8 +66,8 @@ async def tldr(
         inter: disnake.ApplicationCommandInteraction,
         command: str,
         # platform: str = commands.Param(choices=tldr_cli.get_platforms()),
-        platform: str = commands.Param(choices=tldr_cli.get_platforms()),
-        language: str = commands.Param(autocomplete=autocomp_langs)
+        platform: str = commands.Param(default="common",choices=tldr_cli.get_platforms()),
+        language: str = commands.Param(default="en", autocomplete=autocomp_langs)
         # language: str = "en" or commands.Param(autocomplete=autocomp_langs)
 ):
     print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
