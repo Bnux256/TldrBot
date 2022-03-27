@@ -1,7 +1,7 @@
 import unittest
 import sys
 import os
-import tldr.tldr as tldr
+import lib.tldr_cli as tldr
 
 
 class TestGetMd(unittest.TestCase):
