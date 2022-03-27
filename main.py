@@ -83,6 +83,11 @@ async def tldr(
         error_msg: str = "Command doesn't exist in cache. To update, run `/update` command."
         embed: disnake.Embed() = disnake.Embed(description=error_msg, colour=disnake.Colour.from_rgb(237, 66, 69))
         embed.set_author(name="Error", icon_url="https://images-ext-2.discordapp.net/external/6HgbQ8ajjgJozMXg37BWe53K5YTN3YMVmWC93ioekY8/https/raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f6ab.png")
+        
+        # telling user if command exists in other platforms
+        for cur_platform in tldr_cli.get_platforms():
+            if tldr_cli.is_in_cache(command, platform=cur_platform):
+                embed.add_field(name="This command exists in " + cur_platform, value="You can run: `/tldr command:" + command + " platform: " + cur_platform + "`")
 
     # if command exists we send it
     else:
