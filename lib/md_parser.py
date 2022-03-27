@@ -33,6 +33,7 @@ def md_to_embed(md_command: str):
         # parsing back tick code lines
         if line.startswith("`") or line.startswith(" `"):
             field.append(line[line.find("`"):])
+            field[-1] = field[-1].replace("{{", '').replace('}}', '') # removing {{ }}
             fields.append(field)
 
     # creating embed
