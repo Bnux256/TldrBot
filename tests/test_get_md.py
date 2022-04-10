@@ -1,8 +1,8 @@
+# to run use: python3 -m unittest test_get_md.py
 import unittest
 import sys
 import os
 import lib.tldr_cli as tldr
-
 
 class TestGetMd(unittest.TestCase):
     def test_get_en_common(self):
