@@ -1,21 +1,19 @@
+import os
+
 import disnake
 from disnake.ext import commands
 from dotenv import load_dotenv
-import os
-import lib.tldr_cli as tldr_cli
-import lib.progress_bar as progress_bar
+
 import lib.md_parser as md_parser
+import lib.progress_bar as progress_bar
+import lib.tldr_cli as tldr_cli
 
 # if TOKEN env var isn't None than we're running from docker
 if not os.getenv('TOKEN'):
     load_dotenv()  # Loading env variables from .env file
 TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
 
-bot = commands.Bot(
-    command_prefix=">",
-    test_guilds=[866375498762551317]
-)
-
+bot = commands.InteractionBot()
 
 @bot.event
 async def on_ready():
@@ -52,25 +50,48 @@ async def update(inter: disnake.ApplicationCommandInteraction):
 async def autocomp_langs(inter: disnake.ApplicationCommandInteraction, user_input: str):
     """
     autocomplete function for languages
-    param user_input(str): current input
-    returns [str]: languages that begin with the commands' letters
+    param: user_input(str): current input
+    returns [str]: languages that begin with the given input
     """
     # Discord doesn't allow for autocomplete larger than 25 therefore we return the first 25 languages
-    if not user_input:
-        languages = tldr_cli.get_languages()
-        return languages[len(languages)-25:]  # returning the last 25 languages
+    languages = sorted([lang for lang in tldr_cli.get_languages() if lang.lower().startswith(user_input.lower())])
+    # returning the last 25 languages
+    if len(languages) > 25:
+        return languages[:24]
     else:
-        return [lang for lang in tldr_cli.get_languages() if user_input.lower() in lang]
+        return languages 
 
+async def autocomp_platform(inter: disnake.ApplicationCommandInteraction, user_input: str):
+    """
+    autocomplete for chosing platform
+    param: user_input(str): current input
+    returns [str]: platform that begin with the given input
+    """
+    platforms = [platform for platform in tldr_cli.get_platforms() if platform.lower().startswith(user_input.lower())]
+    if len(platforms) > 25:
+        return platforms[:24]
+    else:
+        return platforms 
+
+
+async def autocomp_command(inter: disnake.ApplicationCommandInteraction, user_input: str):
+    """
+    autocomplete for chosing the command
+    param: user_input(str): current input
+    returns [str]: commands that begin with the given input
+    """
+    commands = [command for command in tldr_cli.get_commands() if command.lower().startswith(user_input.lower())]
+    if len(commands) > 25:
+        return commands[:24]
+    else:
+        return commands
 
 @bot.slash_command(description="Retrieve the TLDR for a command")
 async def tldr(
         inter: disnake.ApplicationCommandInteraction,
-        command: str,
-        # platform: str = commands.Param(choices=tldr_cli.get_platforms()),
-        platform: str = commands.Param(default="common",choices=tldr_cli.get_platforms()),
-        language: str = commands.Param(default="en", autocomplete=autocomp_langs)
-        # language: str = "en" or commands.Param(autocomplete=autocomp_langs)
+        command: str = commands.Param(autocomplete=autocomp_command, description="Choose a command!"),
+        platform: str = commands.Param(default="common", autocomplete=autocomp_platform, description="optional - default: common - choose the platform you need"),
+        language: str = commands.Param(default="en", autocomplete=autocomp_langs, description="optional - default: english - choose the prefered language")
 ):
     print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
 
@@ -98,7 +119,4 @@ async def tldr(
     await inter.send(embed=embed)  # sending the embed
 
 
-try:
-    bot.run(TOKEN)
-except Exception as e:
-    print(e)
+bot.run(TOKEN)
