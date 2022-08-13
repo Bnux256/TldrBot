@@ -6,7 +6,9 @@ import lib.tldr_cli as tldr_cli
 import lib.progress_bar as progress_bar
 import lib.md_parser as md_parser
 
-load_dotenv()  # Loading env variables from .env file
+# if TOKEN env var isn't None than we're running from docker
+if not os.getenv('TOKEN'):
+    load_dotenv()  # Loading env variables from .env file
 TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
 
 bot = commands.Bot(
