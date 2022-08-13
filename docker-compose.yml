@@ -1,0 +1,10 @@
+version: '3.5'
+services:
+  TldrBot:
+    container_name: tldrbot
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - TOKEN=<insertYourTokenHere>
+    image: bnux256/tldrbot:latest
+    restart: on-failure
