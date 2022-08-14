@@ -8,7 +8,7 @@ import shutil
 import logging
 
 PAGES_DIR = "tldr-pages"
-
+ZIP_URL = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
 
 def update_cache() -> None:
     """
@@ -19,8 +19,7 @@ def update_cache() -> None:
     # Download Cache
     logging.info("Downloading files, please wait")
     yield "Downloading files, please wait"
-    zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
-    zip_file: Response = requests.get(zip_url)
+    zip_file: Response = requests.get(ZIP_URL)
     with open("tldr.zip", "wb") as file:
         file.write(zip_file.content)
     logging.info("Download complete")
