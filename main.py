@@ -1,4 +1,5 @@
 import os
+import logging
 
 import disnake
 from disnake.ext import commands
@@ -15,11 +16,13 @@ TOKEN = os.getenv('TOKEN')  # Setting environment variable as const
 
 bot = commands.InteractionBot()
 
+log_format = '[%(asctime)s] [%(levelname)s] - %(message)s'
+logging.basicConfig(level='INFO', format=log_format)
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    print("------")
-
+    print(f"The server is on {len(bot.guilds)} servers!")
+    print("-------")
 
 @bot.slash_command(description="Update the bot's TLDR Pages cache")
 async def update(inter: disnake.ApplicationCommandInteraction):
@@ -93,7 +96,7 @@ async def tldr(
         platform: str = commands.Param(default="common", autocomplete=autocomp_platform, description="optional - default: common - choose the platform you need"),
         language: str = commands.Param(default="en", autocomplete=autocomp_langs, description="optional - default: english - choose the prefered language")
 ):
-    print('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
+    logging.info('User Entered: tldr %s (platform: %s; language: %s)' % (command, platform, (language or 'en')))
 
     # if language is english we treat it as None
     if language == 'en':
