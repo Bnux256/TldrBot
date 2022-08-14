@@ -7,12 +7,12 @@ def md_to_embed(md_command: str):
     Params:
     md_commmand (str): a command's markdown file converted to string
     Returns:
-    embed (discord.embed?????): An embed that prints the command.
+    embed: An embed that prints the command.
     """
-    lines: [str] = md_command.split("\n")
+    lines: list[str] = md_command.split("\n")
     description: str = ""
-    fields: [[str]] = []
-    field: [str] = []
+    fields: list[list[str]] = []
+    field: list[str] = []
     title: str = ""
 
     # going through the lines of file
@@ -28,7 +28,7 @@ def md_to_embed(md_command: str):
 
         # parsing field lines
         if line.startswith("-") or line.startswith(" -"):
-            field: [str] = [line[line.find("-"):]]
+            field: list[str] = [line[line.find("-"):]]
 
         # parsing back tick code lines
         if line.startswith("`") or line.startswith(" `"):
