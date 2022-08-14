@@ -20,24 +20,26 @@ def md_to_embed(md_command: str):
 
         # parsing header lines
         if "#" in line and not ("##" in line):
-            title = line[line.find("#") + 1:]
+            title = line[line.find("#") + 1 :]
 
         # parsing description lines
         if ">" in line:
-            description += line[line.find(">") + 1:]
+            description += line[line.find(">") + 1 :]
 
         # parsing field lines
         if line.startswith("-") or line.startswith(" -"):
-            field: list[str] = [line[line.find("-"):]]
+            field: list[str] = [line[line.find("-") :]]
 
         # parsing back tick code lines
         if line.startswith("`") or line.startswith(" `"):
-            field.append(line[line.find("`"):])
-            field[-1] = field[-1].replace("{{", '').replace('}}', '') # removing {{ }}
+            field.append(line[line.find("`") :])
+            field[-1] = field[-1].replace("{{", "").replace("}}", "")  # removing {{ }}
             fields.append(field)
 
     # creating embed
-    embed = disnake.Embed(title=title, colour=disnake.Colour.from_rgb(54, 57, 63), description=description)
+    embed = disnake.Embed(
+        title=title, colour=disnake.Colour.from_rgb(54, 57, 63), description=description
+    )
 
     # adding all fields to embed
     for field in fields:
