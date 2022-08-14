@@ -17,13 +17,13 @@ TOKEN = os.getenv("TOKEN")  # Setting environment variable as const
 bot = commands.InteractionBot()
 
 log_format = "[%(asctime)s] [%(levelname)s] - %(message)s"
-logging.basicConfig(level="INFO", format=log_format)
+logging.basicConfig(level="INFO", format=log_format,filename="logfile.log")
 
 
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
-    print(f"The server is on {len(bot.guilds)} servers!")
+    print(f"The server is on {len(bot.guilds)} {'server' if len(bot.guilds)==1 else 'servers'}!")
     print("-------")
 
 
