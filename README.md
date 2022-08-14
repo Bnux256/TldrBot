@@ -3,7 +3,7 @@ A Discord bot client for the TLDR Pages -  a simpler alternative to man pages.
 Gives you a comprehensible and informative reference manual for every command.
 > "The name comes from the word TL;DR, which is an abbreviation for "too long; didn't read", referring to man pages that are said to be too long by several users." - Wikipedia
 ---
-Run `/tldr tar` to get its TLDR manual: 
+Run `/tldr tar` to get its TLDR manual:     
 ![Screenshot 2022-04-10 11 16 31 AM](https://user-images.githubusercontent.com/80382873/162609321-e9a24ba4-df22-4031-98a7-fcc733f6c14b.png)
 
 ## Try it out!:
