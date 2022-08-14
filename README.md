@@ -12,8 +12,8 @@ Or [Click here to add the bot to your server!](https://discord.com/api/oauth2/au
 
 ## Installation 
 ### Docker-Compose: (recommended)
-Clone the repo and add your bot token to the `docker-compose.yml` file or add a docker secret to it. 
-Run `docker build . -t bnux256/tldrbot` to build the docker container.
+Download the `docker-compose.yml` file and bot token or a docker secret to it. 
+Run `docker build https://github.com/Bnux256/TldrBot.git#main -t bnux256/tldrbot --no-cache` to build the docker container.
 Now to start the bot use: `docker compose up -d` and `docker compose stop` to stop it.
 
 ### Standalone (Instruction for UNIX os)- requires Python>=3.9:
@@ -21,3 +21,5 @@ Clone the repo and add your bot token to `.env` file.
 Create a venv using `python3 -m venv venv` and enter into it using `source venv/bin/activate`.
 Install dependencies by running `pip3 install -r requirments.txt`
 Now to start it (if you are already inside the venv you created) run `python3 main.py`.
+
+After the bot starts for the first time, run the `/update` commmand to setup it's cache. 
