@@ -6,7 +6,7 @@ Gives you a comprehensible and informative reference manual for every command.
 Run `/tldr tar` to get its TLDR manual:     
 ![Screenshot 2022-04-10 11 16 31 AM](https://user-images.githubusercontent.com/80382873/162609321-e9a24ba4-df22-4031-98a7-fcc733f6c14b.png)
 
-## Try it out!:
+## Try it out!
 [Click here to add the bot to your server!](https://discord.com/api/oauth2/authorize?client_id=930781398434992149&permissions=2048&scope=bot%20applications.commands)
 
 ## Installation 
