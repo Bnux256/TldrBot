@@ -5,6 +5,7 @@ import os
 import json
 from requests.models import Response
 import shutil
+import logging
 
 PAGES_DIR = 'tldr-pages'
 
@@ -16,17 +17,17 @@ def update_cache() -> None:
     """
 
     # Download Cache
-    print('Downloading files, please wait')
+    logging.info('Downloading files, please wait')
     yield 'Downloading files, please wait'
     zip_url = "https://raw.githubusercontent.com/tldr-pages/tldr-pages.github.io/master/assets/tldr.zip"
     zip_file: Response = requests.get(zip_url)
     with open('tldr.zip', 'wb') as file:
         file.write(zip_file.content)
-    print('Download complete')
+    logging.info('Download complete')
     yield 'Download complete'
 
     # Unzip the file
-    print('Unzipping file')
+    logging.info('Unzipping file')
     yield 'Unzipping file'
 
     # deleting folder if exists
@@ -35,7 +36,9 @@ def update_cache() -> None:
     os.mkdir(PAGES_DIR)
     with ZipFile('tldr.zip', 'r') as file:
         file.extractall(PAGES_DIR)
-    print('Unzip complete')
+    os.remove('tldr.zip') # deleting tldr.zip
+
+    logging.info('Unzip complete')
     yield 'Unzip complete'
 
     yield 'Cache Updated!'
@@ -52,7 +55,7 @@ def is_in_cache(input_command: str, platform: str = "common", language: str = No
    
     # making sure that index.js exists
     if not os.path.exists('tldr-pages/index.json'):
-        print("commands index doesn't exist - downloading cache")
+        logging.info("commands index doesn't exist - downloading cache")
         # updating cache
         gen = update_cache()
         for i in range(5):
@@ -137,3 +140,13 @@ def get_platforms() -> list[str]:
         return os.listdir(os.path.join(PAGES_DIR, 'pages'))
     except FileNotFoundError:
         return [""]
+
+def get_commands() -> list[str]:
+    """
+    returns a list of all commands
+    """
+    # loading index.json file from cache
+    with open('tldr-pages/index.json') as file:
+        cache_index: dict = json.load(file)
+    commands: list = cache_index.get('commands')
+    return [dict.get("name") for dict in commands]
